@@ -5,11 +5,11 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2  
     - run: |
-          jar cvf hawa.war *
-    - name: copy file via ssh password
-      uses: appleboy/scp-action@master
+        jar cvf hawa.war *
+    - name: Copy file via SSH password
+      uses: appleboy/scp-action@v0.1.0  
       with:
         host: ${{ secrets.HOST_DNS }}
         username: ${{ secrets.USERNAME }}
