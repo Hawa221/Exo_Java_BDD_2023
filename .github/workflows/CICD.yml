@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2  
     - run: |
-        jar cvf hawa.war *
+        jar cvf hawa.war*
     - name: Copy file via SSH password
       uses: appleboy/scp-action@v0.1.0  
       with:
