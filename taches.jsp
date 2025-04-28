@@ -1,37 +1,23 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <html>
 <head>
-<title>Taches</title>
+    <title>Ajouter une tâche</title>
 </head>
-<body bgcolor=white>
-<h1>Saisir une tache</h1>
-<form action="#" method="post">
-    <label for="inputValeur">Saisir le nom d'une tache : </label>
-    <input type="text" id="inputValeur" name="valeur">
-    <input type="submit" value="Enregistrer">
-</form>
+<body>
+    <h1>Saisir une tâche</h1>
+    <form action="ajouterTache" method="post">
+        <label for="inputTitre">Titre de la tâche:</label>
+        <input type="text" id="inputTitre" name="titre" required>
+        <label for="inputDescription">Description de la tâche:</label>
+        <input type="text" id="inputDescription" name="description" required>
+        <input type="submit" value="Ajouter la tâche">
+    </form>
 
-<%! 
-    class MyClass {
-        String nameTache;
-
-        public MyClass(String name) {
-            nameTache = name;
-        }
-    }
-%>
-
-<%
-    String valeur = request.getParameter("valeur");
-
-    if (valeur != null && !valeur.isEmpty()) {
-        MyClass tache = new MyClass(valeur);
-%>
-        <p>Nom de la tâche : <%= tache.nameTache %></p>
-<%
-    }
-%>
-
+    <h2>Liste des tâches :</h2>
+    <ul>
+        <c:forEach var="tache" items="${sessionScope.taches}">
+            <li>${tache.titre} - ${tache.description}</li>
+        </c:forEach>
+    </ul>
 </body>
 </html>
