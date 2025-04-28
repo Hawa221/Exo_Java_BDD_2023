@@ -1,3 +1,4 @@
+
 name: Industrialisation continue sur le serveur AWS (Tomcat)
 on: push
 jobs:
@@ -17,3 +18,5 @@ jobs:
         port: ${{ secrets.DEPLOY_PORT }}
         source: "hawa.war"
         target: "/opt/tomcat/webapps"
+
+
