@@ -11,7 +11,6 @@ jobs:
     - name: Copy file via SSH password
       uses: appleboy/scp-action@v0.1.0  
       with:
-       host: ec2-54-213-45-76.eu-west-1.compute.amazonaws.com
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         port: ${{ secrets.DEPLOY_PORT }}
