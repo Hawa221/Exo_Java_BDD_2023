@@ -1,65 +1,66 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu du Pendu</title>
+    <style>
+        .hidden { color: #ccc; }
+        .incorrect { color: red; }
+        .correct { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Jeu du Pendu</h1>
+    <h3>Devine le mot !</h3>
 
-public class JeuPendu {
-    private String motSecret;
-    private String motAffiche;
-    private int essaisRestants;
-    private List<Character> lettresProposees;
+    <!-- Affichage du mot à deviner -->
+    <p id="motADeviner"></p>
 
-    public JeuPendu(String motSecret, int essaisMax) {
-        this.motSecret = motSecret.toUpperCase();
-        this.motAffiche = "_".repeat(motSecret.length());
-        this.essaisRestants = essaisMax;
-        this.lettresProposees = new ArrayList<>();
-    }
+    <!-- Entrée pour proposer une lettre -->
+    <input type="text" id="lettre" maxlength="1">
+    <button onclick="proposerLettre()">Proposer</button>
 
-    public boolean proposerLettre(char lettre) {
-        lettre = Character.toUpperCase(lettre);
-        
-        if (lettresProposees.contains(lettre)) {
-            System.out.println("Cette lettre a déjà été proposée.");
-            return false;
-        }
+    <h3>Lettres proposées :</h3>
+    <p id="lettresProposees"></p>
 
-        lettresProposees.add(lettre);
-        
-        // Si la lettre est dans le mot
-        if (motSecret.contains(String.valueOf(lettre))) {
-            // Mettre à jour le mot affiché
-            StringBuilder motTemp = new StringBuilder(motAffiche);
-            for (int i = 0; i < motSecret.length(); i++) {
-                if (motSecret.charAt(i) == lettre) {
-                    motTemp.setCharAt(i, lettre);
+    <h3>Essais restants : <span id="essaisRestants">6</span></h3>
+
+    <h3 id="message"></h3>
+
+    <script>
+        // Liste des mots possibles
+        const mots = ["javascript", "html", "css", "pendu", "jeu"];
+        // Choisir un mot aléatoire
+        const motADeviner = mots[Math.floor(Math.random() * mots.length)];
+
+        let lettresDevinees = [];
+        let essaisRestants = 6;
+
+        // Fonction pour afficher le mot avec des _ pour les lettres non devinées
+        function afficherMot() {
+            let motAffiche = '';
+            for (let i = 0; i < motADeviner.length; i++) {
+                if (lettresDevinees.includes(motADeviner[i])) {
+                    motAffiche += motADeviner[i];
+                } else {
+                    motAffiche += '_';
                 }
             }
-            motAffiche = motTemp.toString();
-            return true;
-        } else {
-            essaisRestants--;
-            return false;
+            document.getElementById('motADeviner').textContent = motAffiche;
         }
-    }
 
-    public boolean estGagne() {
-        return !motAffiche.contains("_");
-    }
+        // Fonction pour proposer une lettre
+        function proposerLettre() {
+            const lettre = document.getElementById('lettre').value.toLowerCase();
+            if (lettre && !lettresDevinees.includes(lettre)) {
+                lettresDevinees.push(lettre);
+                document.getElementById('lettresProposees').textContent = lettresDevinees.join(", ");
 
-    public boolean estPerdu() {
-        return essaisRestants == 0;
-    }
+                if (motADeviner.includes(lettre)) {
+                    document.getElementById('message').textContent = "Bonne lettre !";
+                    document.getElementById
 
-    public String getMotAffiche() {
-        return motAffiche;
-    }
-
-    public int getEssaisRestants() {
-        return essaisRestants;
-    }
-
-    public List<Character> getLettresProposees() {
-        return lettresProposees;
-    }
-}
+        
+       
+   
