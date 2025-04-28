@@ -59,8 +59,29 @@
 
                 if (motADeviner.includes(lettre)) {
                     document.getElementById('message').textContent = "Bonne lettre !";
-                    document.getElementById
+                    document.getElementById('message').className = "correct";
+                } else {
+                    essaisRestants--;
+                    document.getElementById('essaisRestants').textContent = essaisRestants;
+                    document.getElementById('message').textContent = "Mauvaise lettre !";
+                    document.getElementById('message').className = "incorrect";
+                }
+            } else {
+                alert("Veuillez entrer une nouvelle lettre.");
+            }
+            document.getElementById('lettre').value = '';
 
-        
-       
-   
+            afficherMot();
+
+            if (essaisRestants <= 0) {
+                document.getElementById('message').textContent = "Vous avez perdu ! Le mot était " + motADeviner;
+            } else if (!document.getElementById('motADeviner').textContent.includes('_')) {
+                document.getElementById('message').textContent = "Vous avez gagné ! Le mot est " + motADeviner;
+            }
+        }
+
+        // Initialisation du jeu
+        afficherMot();
+    </script>
+</body>
+</html>
