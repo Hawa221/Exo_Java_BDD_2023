@@ -1,87 +1,133 @@
-<!DOCTYPE html>
-<html lang="fr">
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Random"%>
+<%@page import="java.util.Arrays"%>
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu du Pendu</title>
-    <style>
-        .hidden { color: #ccc; }
-        .incorrect { color: red; }
-        .correct { color: green; }
-    </style>
+<title>Jeu du Pendu</title>
 </head>
-<body>
-    <h1>Jeu du Pendu</h1>
-    <h3>Devine le mot !</h3>
+<body bgcolor="white">
+<h1>Jeu du Pendu</h1>
 
-    <!-- Affichage du mot à deviner -->
-    <p id="motADeviner"></p>
+<%! 
+    public class JeuPendu {
+        private String motADeviner;
+        private char[] motAffiche;
+        private List<Character> lettresProposees;
+        private int essaisRestants;
 
-    <!-- Entrée pour proposer une lettre -->
-    <input type="text" id="lettre" maxlength="1">
-    <button onclick="proposerLettre()">Proposer</button>
-
-    <h3>Lettres proposées :</h3>
-    <p id="lettresProposees"></p>
-
-    <h3>Essais restants : <span id="essaisRestants">6</span></h3>
-
-    <h3 id="message"></h3>
-
-    <script>
-        // Liste des mots possibles
-        const mots = ["javascript", "html", "css", "pendu", "jeu"];
-        // Choisir un mot aléatoire
-        const motADeviner = mots[Math.floor(Math.random() * mots.length)];
-
-        let lettresDevinees = [];
-        let essaisRestants = 6;
-
-        // Fonction pour afficher le mot avec des _ pour les lettres non devinées
-        function afficherMot() {
-            let motAffiche = '';
-            for (let i = 0; i < motADeviner.length; i++) {
-                if (lettresDevinees.includes(motADeviner[i])) {
-                    motAffiche += motADeviner[i];
-                } else {
-                    motAffiche += '_';
-                }
+        public JeuPendu(List<String> listeMots, int essais) {
+            Random rand = new Random();
+            motADeviner = listeMots.get(rand.nextInt(listeMots.size()));
+            motAffiche = new char[motADeviner.length()];
+            for (int i = 0; i < motAffiche.length; i++) {
+                motAffiche[i] = '_';
             }
-            document.getElementById('motADeviner').textContent = motAffiche;
+            lettresProposees = new ArrayList<>();
+            essaisRestants = essais;
         }
 
-        // Fonction pour proposer une lettre
-        function proposerLettre() {
-            const lettre = document.getElementById('lettre').value.toLowerCase();
-            if (lettre && !lettresDevinees.includes(lettre)) {
-                lettresDevinees.push(lettre);
-                document.getElementById('lettresProposees').textContent = lettresDevinees.join(", ");
-
-                if (motADeviner.includes(lettre)) {
-                    document.getElementById('message').textContent = "Bonne lettre !";
-                    document.getElementById('message').className = "correct";
-                } else {
-                    essaisRestants--;
-                    document.getElementById('essaisRestants').textContent = essaisRestants;
-                    document.getElementById('message').textContent = "Mauvaise lettre !";
-                    document.getElementById('message').className = "incorrect";
+        public boolean proposerLettre(char lettre) {
+            if (lettresProposees.contains(lettre)) {
+                return false;
+            }
+            lettresProposees.add(lettre);
+            boolean lettreTrouvee = false;
+            for (int i = 0; i < motADeviner.length(); i++) {
+                if (motADeviner.charAt(i) == lettre) {
+                    motAffiche[i] = lettre;
+                    lettreTrouvee = true;
                 }
-            } else {
-                alert("Veuillez entrer une nouvelle lettre.");
             }
-            document.getElementById('lettre').value = '';
-
-            afficherMot();
-
-            if (essaisRestants <= 0) {
-                document.getElementById('message').textContent = "Vous avez perdu ! Le mot était " + motADeviner;
-            } else if (!document.getElementById('motADeviner').textContent.includes('_')) {
-                document.getElementById('message').textContent = "Vous avez gagné ! Le mot est " + motADeviner;
+            if (!lettreTrouvee) {
+                essaisRestants--;
             }
+            return lettreTrouvee;
         }
 
-        // Initialisation du jeu
-        afficherMot();
-    </script>
+        public boolean estGagne() {
+            for (char c : motAffiche) {
+                if (c == '_') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean estPerdu() {
+            return essaisRestants <= 0;
+        }
+
+        public String afficherEtat() {
+            return "Mot : " + new String(motAffiche) + "<br>" +
+                   "Lettres proposées : " + lettresProposees + "<br>" +
+                   "Essais restants : " + essaisRestants + "<br>";
+        }
+
+        public String getMotADeviner() {
+            return motADeviner;
+        }
+    }
+%>
+
+<%
+    List<String> listeMots = Arrays.asList("PROGRAMME", "JAVA", "ORDINATEUR", "INTERNET", "CLAVIER", "SOURIS", "ECRAN", "LOGICIEL", "COMPILATEUR", "ALGORITHME");
+
+    // Vérifier si un jeu existe déjà dans la session
+    JeuPendu jeu = (JeuPendu) session.getAttribute("jeu");
+
+    if (jeu == null) {
+        // Si non, créer un nouveau jeu
+        jeu = new JeuPendu(listeMots, 6);
+        session.setAttribute("jeu", jeu);
+    }
+
+    // Récupérer la lettre proposée
+    String lettreProposee = request.getParameter("lettre");
+    if (lettreProposee != null && !lettreProposee.isEmpty()) {
+        jeu.proposerLettre(lettreProposee.toUpperCase().charAt(0));
+    }
+
+    // Afficher l'état du jeu
+    out.println(jeu.afficherEtat());
+%>
+
+<%
+    if (jeu.estGagne()) {
+%>
+        <h2>Félicitations, vous avez gagné ! 🎉</h2>
+        <form action="pendu.jsp" method="post">
+            <input type="submit" value="Rejouer">
+            <input type="hidden" name="restart" value="true">
+        </form>
+<%
+    } else if (jeu.estPerdu()) {
+%>
+        <h2>Dommage, vous avez perdu. Le mot était : <%= jeu.getMotADeviner() %> 😢</h2>
+        <form action="pendu.jsp" method="post">
+            <input type="submit" value="Rejouer">
+            <input type="hidden" name="restart" value="true">
+        </form>
+<%
+    } else {
+%>
+        <form action="pendu.jsp" method="post">
+            <label for="lettre">Proposez une lettre :</label>
+            <input type="text" id="lettre" name="lettre" maxlength="1" required>
+            <input type="submit" value="Envoyer">
+        </form>
+<%
+    }
+
+    // Gérer une demande de redémarrage
+    String restart = request.getParameter("restart");
+    if ("true".equals(restart)) {
+        session.removeAttribute("jeu"); // Supprimer l'ancien jeu
+        response.sendRedirect("pendu.jsp"); // Recharger la page
+    }
+%>
+
 </body>
 </html>
