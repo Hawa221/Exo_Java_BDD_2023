@@ -1,5 +1,5 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ page import="java.io.*" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <html>
 <head>
@@ -7,12 +7,16 @@
 </head>
 <body>
     <%
+        // Déclaration de la chaîne
         String bonjour = "salut la compagnie";
+
+        // Conversion en majuscules
         String majuscules = bonjour.toUpperCase();
 
+        // Mise en majuscule de la première lettre
         String capitalise = "";
         if (bonjour != null && !bonjour.isEmpty()) {
-            capitalise = bonjour.substring(0, 1).toUpperCase() + bonjour.substring(1).toLowerCase();
+            capitalise = bonjour.substring(0, 1).toUpperCase() + bonjour.substring(1);
         }
     %>
 
