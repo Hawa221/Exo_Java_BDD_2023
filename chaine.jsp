@@ -1,36 +1,23 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.*"%>
+<%@ page import="java.io.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <html>
 <head>
-    <title>Manipulation de chaîne</title>
+    <title>Exercice Chaine</title>
 </head>
-<body bgcolor="white">
-<h1>Manipulation de chaîne</h1>
+<body>
+    <%
+        String bonjour = "salut la compagnie";
+        String majuscules = bonjour.toUpperCase();
 
-<%! 
-    public class ChaineUtils {
-        public static String mettreEnMajuscules(String texte) {
-            return texte.toUpperCase();
+        String capitalise = "";
+        if (bonjour != null && !bonjour.isEmpty()) {
+            capitalise = bonjour.substring(0, 1).toUpperCase() + bonjour.substring(1).toLowerCase();
         }
+    %>
 
-        public static String majusculeInitiale(String texte) {
-            if (texte == null || texte.isEmpty()) return texte;
-            return texte.substring(0, 1).toUpperCase() + texte.substring(1);
-        }
-    }
-%>
-
-<%
-    String texte = "salut la compagnie";
-    String majuscules = ChaineUtils.mettreEnMajuscules(texte);
-    String initMajuscule = ChaineUtils.majusculeInitiale(texte);
-
-    out.println("<b>Texte original :</b> " + texte + "<br>");
-    out.println("<b>En majuscules :</b> " + majuscules + "<br>");
-    out.println("<b>Initiale en majuscule :</b> " + initMajuscule + "<br>");
-%>
-
+    <h2>Chaîne originale : <%= bonjour %></h2>
+    <h2>En majuscules : <%= majuscules %></h2>
+    <h2>Première lettre en majuscule : <%= capitalise %></h2>
 </body>
 </html>
- 
